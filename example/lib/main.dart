@@ -78,7 +78,7 @@ class _ExampleExpertState extends State<ExampleExpert> {
               ),
             ),
           ),
-
+          elevation: 16.0,
           //required
           //This is the content of the bottom sheet which will be extendable by dragging.
           expandableContent: Container(

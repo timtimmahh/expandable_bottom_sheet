@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -49,6 +51,13 @@ class ExpandableBottomSheet extends StatefulWidget {
   /// your content. You can use it for example for navigation or a menu.
   final Widget? persistentFooter;
 
+  /// Bottom sheet elevation.
+  final double? elevation;
+
+  final Color? shadowColor;
+
+  final ShapeBorder? shape;
+
   /// [persistentContentHeight] is the height of the content which will never
   /// been contracted. It only relates to [expandableContent]. [persistentHeader]
   /// and [persistentFooter] will not be affected by this.
@@ -88,6 +97,9 @@ class ExpandableBottomSheet extends StatefulWidget {
     required this.background,
     this.persistentHeader,
     this.persistentFooter,
+    this.elevation,
+    this.shadowColor,
+    this.shape,
     this.persistentContentHeight = 0.0,
     this.animationCurveExpand = Curves.ease,
     this.animationCurveContract = Curves.ease,
@@ -111,7 +123,14 @@ class ExpandableBottomSheetState extends State<ExpandableBottomSheet>
 
   late AnimationController _controller;
 
+  // double _rawDraggableHeight = 0;
   double _draggableHeight = 0;
+/*
+  double get _draggableHeight => _rawDraggableHeight;
+
+  set _draggableHeight(double value) => min(
+      MediaQuery.of(_contentKey.currentContext!).size.height / 2.0,
+      _rawDraggableHeight);*/
   double? _positionOffset;
   double _startOffsetAtDragDown = 0;
   double? _startPositionAtDragDown = 0;
@@ -195,18 +214,35 @@ class ExpandableBottomSheetState extends State<ExpandableBottomSheet>
                   onVerticalDragDown: _dragDown,
                   onVerticalDragUpdate: _dragUpdate,
                   onVerticalDragEnd: _dragEnd,
-                  child: Column(
+                  child: /*Material(
+                      elevation: widget.elevation ?? 0.0,
+                      color: Colors.transparent,
+                      shadowColor: widget.shadowColor,
+                      shape: widget.shape,
+                      child: */
+                      Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Container(
+                      Material(
                           key: _headerKey,
+                          type: MaterialType.canvas,
+                          elevation: widget.elevation ?? 0.0,
+                          color: Colors.transparent,
+                          shadowColor: widget.shadowColor,
+                          shape: widget.shape,
                           child: widget.persistentHeader ?? Container()),
-                      Container(
-                        key: _contentKey,
-                        child: widget.expandableContent,
-                      ),
+                      BottomAppBar(
+                          key: _contentKey,
+                          // type: MaterialType.card,
+                          elevation: 100.0,
+                          // color: Colors.transparent,
+                          // shadowColor: widget.shadowColor,
+                          // shape: widget.shape,
+                          // clipBehavior: Clip.hardEdge,
+                          // borderOnForeground: false,
+                          child: widget.expandableContent),
                     ],
-                  ),
+                  ) /*)*/,
                 ),
               )
             ],
